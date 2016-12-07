@@ -1,22 +1,35 @@
 #!/Users/travisthomas/virtualenvs/flask/bin/python
 
-import os, unittest, requests
+import os, unittest, requests, json
 
 url = 'http://localhost:5000'
+post_url = url + '/post'
+posts_url = url + '/posts'
 
 class FlaskTestCase(unittest.TestCase):
 
-    def setUp(self):
-        pass
+    def test_page_not_found(self):
+        rsp = requests.get(url)
+        self.assertTrue(rsp.status_code == 404)
 
-    def tearDown(self):
-        pass
+    def test_post_returns_200(self):
+        data = {"title":"test_post_returns_200", "body":"you posted!"}
+        rsp = requests.post(post_url, data=json.dumps(data), headers={
+            'content-type':'application/json'})
+        self.assertTrue(rsp.status_code == 200)
 
-    def test_responds(self):
-        data = '{"title":"this is a title", "body":"Tis the season."}'
-        rsp = requests.get(url, data)
-        print(rsp)
-        self.assertTrue(rsp)
+    def test_posts_returns_200(self):
+        rsp = requests.get(posts_url)
+        self.assertTrue(rsp.status_code == 200)
+
+    def test_post_shows_what_was_posted(self):
+        data = {"title":"This should be in the response", 
+            "body":"This has been posted and should be in the list of posts!"}
+        rsp = requests.post(post_url, data=json.dumps(data), headers={
+            'content-type':'application/json'})
+
+        self.assertTrue(rsp.status_code == 200)
+        
 
 if __name__ == '__main__':
     unittest.main()
