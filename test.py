@@ -1,4 +1,4 @@
-#!/Users/travisthomas/virtualenvs/flask/bin/python
+#!/usr/bin/env python
 
 import os, unittest, requests, json
 from base64 import b64encode

@@ -1,4 +1,4 @@
-#!/Users/travisthomas/virtualenvs/flask/bin/python
+#!/usr/bin/env python
 
 import sqlite3, copy, os
 from flask import Flask, jsonify, request, abort
