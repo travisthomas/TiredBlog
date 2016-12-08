@@ -30,8 +30,7 @@ To post a new blog entry, send an HTTP POST request with a JSON payload
 of `{'title': 'blog-title', 'body' : 'blog-body-text'}` to 
 `http://localhost:5000/post`. To query the list of posts, send an HTTP GET 
 request with no payload to `http://localhost:5000/posts`. Parse the JSON
-response; each item in the list is a post. A post is comprised of an ordered
-list of three items: [post id, title, and body].
+response; each item in the list is a post.
 
 ##Tests
 
