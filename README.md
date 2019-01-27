@@ -14,6 +14,16 @@ You must have Python3 installed along with pipenv. Install the required packages
 
 will start the blog server.  By default, the flask server binds to `localhost:5000`.
 
+## Containerized execution
+
+This project includes a Dockerfile to run the blog in a Docker container. The only prerequisite is the Docker daemon installed. Build the container: 
+
+`docker build . -t tiredblog`
+
+Then, to run the container:
+
+`docker run -p 5000:5000 tiredblog`
+
 ## The API
 
 There are two endpoints: 
@@ -36,4 +46,8 @@ The blog must be running and bound to the hostname `localhost`, or you can adapt
  To execute the tests:
 
 `pipenv run python test.py`
+
+#### Dockerized execution
+
+`docker run --net=host tiredblog ./test.py`
 

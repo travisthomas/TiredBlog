@@ -14,7 +14,7 @@ def post():
     Generates a random base 64 string for a post_id.
     Persists the post_id, title, and body of a post to sqlite db.
     '''
-    if not request.is_json():
+    if not request.is_json:
         abort(400)
     try:
         entry = {
@@ -51,4 +51,4 @@ def posts():
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0")
