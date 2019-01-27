@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sqlite3, copy, os
 from flask import Flask, jsonify, request, abort
@@ -14,11 +14,11 @@ def post():
     Generates a random base 64 string for a post_id.
     Persists the post_id, title, and body of a post to sqlite db.
     '''
-    if not request.json:
+    if not request.is_json():
         abort(400)
     try:
         entry = {
-            'post_id' : b64encode(os.urandom(15)),
+            'post_id' : b64encode(os.urandom(15)).decode('utf-8'),
             'title' : request.json['title'],
             'body' : request.json['body']
         }
@@ -33,7 +33,7 @@ def post():
     conn.close()
     return jsonify({'post_id':entry['post_id']})
 
-@app.route('/posts')
+@app.route('/posts', methods=['GET'])
 def posts():
     '''
     Lists the posts persisted in the db.

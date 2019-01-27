@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import os, unittest, requests, json
+import os, unittest, requests, json, argparse
 from base64 import b64encode
 
 url = 'http://localhost:5000'
@@ -19,7 +19,8 @@ class FlaskTestCase(unittest.TestCase):
             "title" : "test_post_returns_200", 
             "body" : "you posted!"
         }
-        rsp = requests.post(post_url, data=json.dumps(data), headers=header_json)
+        rsp = requests.post(post_url, json=data, headers=header_json)
+
         self.assertTrue(rsp.status_code == 200)
 
     def test_posts_returns_200(self):
@@ -31,12 +32,12 @@ class FlaskTestCase(unittest.TestCase):
         Create a randomized string to persist as a post's title. POST it, then
         get the list of posts and find that string among the titles of the posts.
         '''
-        index = b64encode(os.urandom(6))
+        index = b64encode(os.urandom(6)).decode('utf-8')
         data = {
             "title" : index, 
             "body" : "This has been posted and should be in the list of posts!"
         }
-        rsp = requests.post(post_url, data=json.dumps(data), headers=header_json)
+        rsp = requests.post(post_url, json=data, headers=header_json)
         self.assertTrue(rsp.status_code == 200)
         
         rsp = requests.get(posts_url)
