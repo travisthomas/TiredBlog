@@ -6,5 +6,4 @@ RUN apk add --update \
 COPY . /app
 WORKDIR /app
 RUN pipenv install --system
-#EXPOSE 5000
 CMD ["python", "./blog.py"]

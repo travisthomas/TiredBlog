@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sqlite3, copy, os
+import sqlite3, os
 from flask import Flask, jsonify, request, abort
 from base64 import b64encode
 
@@ -25,12 +25,7 @@ def post():
     except KeyError:
         abort(400)
 
-    conn = sqlite3.connect(r'blog.db')
-    c = conn.cursor()
-    c.execute('insert into posts VALUES (?, ?, ?);', 
-        (entry['post_id'], entry['title'], entry['body']))
-    conn.commit()
-    conn.close()
+    database.write_post(entry)
     return jsonify({'post_id':entry['post_id']})
 
 @app.route('/posts', methods=['GET'])
@@ -38,17 +33,35 @@ def posts():
     '''
     Lists the posts persisted in the db.
     '''
-    conn = sqlite3.connect(r'blog.db')
-    c = conn.cursor()
-    raw_posts = c.execute('select * from posts;').fetchall()
-    conn.close()
-    posts = [{
-        'post_id' : post[0], 
-        'title' : post[1], 
-        'body' : post[2]
-    } for post in raw_posts]
+    raw_posts = database.get_all_posts()
+    posts = []
+    for post in raw_posts:
+        posts.append({'post_id' : post[0], 'title' : post[1], 'body' : post[2]})
     return jsonify(posts)
-    
+
+class Database:
+
+    def __init__(self, path):
+        self.path = path
+
+    def get_all_posts(self):
+        connection = sqlite3.connect(self.path)
+        cursor = connection.cursor()
+        raw_posts = cursor.execute('select post_id, title, body from posts;').fetchall()
+        
+        connection.close()
+        return raw_posts
+
+    def write_post(self, entry):
+        connection = sqlite3.connect(self.path)
+        cursor = connection.cursor()
+        cursor.execute('insert into posts VALUES (?, ?, ?);', 
+            (entry['post_id'], entry['title'], entry['body']))
+        connection.commit()
+        connection.close()
+
+
 
 if __name__ == '__main__':
+    database = Database('blog.db')
     app.run(host="0.0.0.0")
